@@ -81,3 +81,25 @@ export const getPresentStudents = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch present students' });
   }
 };
+
+export const getAbsentStudents = async (req, res) => {
+  try {
+    const { class_id } = req.params;
+    const result = await pool.query(
+      `SELECT s.unique_number, s.name 
+       FROM students s 
+       WHERE s.class_id = $1 
+       AND NOT EXISTS (
+         SELECT 1 FROM attendance a 
+         WHERE a.student_id = s.id 
+         AND a.class_id = $1 
+         AND a.date = CURRENT_DATE
+       )`,
+      [class_id]
+    );
+    res.json({ class_id: parseInt(class_id), date: new Date().toISOString().split('T')[0], absent_students: result.rows });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch absent students' });
+  }
+};
