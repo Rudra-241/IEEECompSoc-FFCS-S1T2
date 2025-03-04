@@ -1,3 +1,34 @@
+## Setup Guide
+
+### Prerequisites
+- Ensure **PostgreSQL** is installed and running.
+- Update database credentials in `src/config/database.js`:
+
+```javascript
+import pkg from "pg";
+const { Pool } = pkg;
+
+const pool = new Pool({
+  user: "postgres", 
+  host: "localhost",
+  database: "attendance_db", 
+  password: "your_password", 
+  port: 5432, 
+});
+
+export default pool;
+```
+
+### Installation
+```sh
+npm install
+```
+
+### Start the Server
+```sh
+npm start
+```
+
 ## API Usage using curl
 
 ### 1. Create a New Class
